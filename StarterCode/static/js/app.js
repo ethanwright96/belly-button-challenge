@@ -10,9 +10,33 @@ const data = d3.json(url);
 
 console.log("Data Promise:", data);
 
-// 2. Create a horizontal bar chart with a dropdown menu to display the top 10 OTUs found in that individual
+// Fetch the JSON data and console log it
+d3.json(url).then(function(data) {
+    // Access and save key fields
+    var names = data.names;
+    
+    var samples = data.samples;
 
-// First of all, I do not know the syntax for a horizontal bar chart. Find that.
+    // Extract sample_values
+    var sampleValues = samples.map(function(sample) {
+        return sample.sample_values;
+    });
+    // Extract otu_ids
+    var otuIds = samples.map(function(sample) {
+        return sample.otu_ids;
+    });
+    // Extract otu_labels
+    var otuLabels = samples.map(function(sample) {
+        return sample.otu_labels;
+    })
+
+    // Print the saved data to the console
+    console.log(sampleValues);
+    console.log(otuIds);
+    console.log(otuLabels);
+  });
+
+// 2. Create a horizontal bar chart with a dropdown menu to display the top 10 OTUs found in that individual
 
 var slice = [{
     type: 'bar',
@@ -21,60 +45,13 @@ var slice = [{
     orientation: 'h'
   }];
   
-  Plotly.newPlot('myDiv', slice);
+  Plotly.newPlot('bar', slice);
 
 // Second of all, I do not know how to 'call' specific fields from data. Find that.
-
-const sampleValues = data.sample_values;
-const otuIds = data.otu_ids;
-const otuLabels = data.otu_labels;
 
 // 2.1 Use sample_values as the values for the bar chart
 // 2.2 Use otu_ids as the labels for the bar chart
 // 2.3 Use otu_labels as the hovertext for the chart
-
-// Define the dimensions for the chart
-const width = 500;
-const height = 300;
-
-// Create a scale for the x-axis based on the sample values
-const xScale = d3.scaleLinear()
-  .domain([0, d3.max(sampleValues)])
-  .range([0, width]);
-
-  // Create a scale for the y-axis based on the OTU IDs
-const yScale = d3.scaleBand()
-.domain(otuIds)
-.range([0, height])
-.padding(0.1);
-
-// Create the SVG element to hold the chart
-const svg = d3.select("body")
-  .append("svg")
-  .attr("width", width)
-  .attr("height", height);
-
-// Create the horizontal bars
-svg.selectAll("rect")
-  .data(sampleValues)
-  .enter()
-  .append("rect")
-  .attr("x", 0)
-  .attr("y", (_, i) => yScale(otuIds[i]))
-  .attr("width", d => xScale(d))
-  .attr("height", yScale.bandwidth())
-  .attr("fill", "steelblue");
-
-// Add labels to the bars
-svg.selectAll("text")
-  .data(sampleValues)
-  .enter()
-  .append("text")
-  .text((d, i) => otuLabels[i])
-  .attr("x", 5)
-  .attr("y", (_, i) => yScale(otuIds[i]) + yScale.bandwidth() / 2)
-  .attr("dy", "0.35em")
-  .attr("fill", "white");
 
 
 // 3. Create a bubble chart that displays each sample
@@ -85,13 +62,28 @@ svg.selectAll("text")
 // 3.4 Use otu_ids for the marker colors
 // 3.5 Use otu_labels for the text values
 
+
+
+
 // 4. Display the sample metadata, i.e., an individual's demographic information
+
+
+
 
 // 5. Display each key-value pair from the metadata JSON object somewhere on the page
 
+
+
+
 // 6. Update all the plots when a new sample is selected. Create any layout you would like for your dashboard.
 
+
+
+
 // 7. Deploy app to a free static page hosting service, such as GitHub Pages.
+
+
+
 
 // Submission: Submit the links to your deployment and GitHub repo. Repo should have regular commits and a thorough README file.
 
